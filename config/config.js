@@ -3,17 +3,17 @@
 /**
  * The server port - the port to run Pokemon Showdown under
  */
-exports.port = 8000;
+exports.port = 80;
 
 /**
  * The server Namr - Being used to rename custom-plugins.
  */
-exports.serverName = 'LightVoid';
+exports.serverName = 'Master';
 
 /**
 * The server IP - Being used to show avatars in profile.
 */
-exports.serverIp = 'serverip';
+exports.serverIp = 'star---showdown-darkeavile.c9users.io';
 
 /**
  * The server address - the address at which Pokemon Showdown should be hosting
@@ -61,17 +61,45 @@ exports.wsdeflate = {
 }; */
 
 /**
- * TODO: allow SSL to actually be possible to use for third-party servers at
- * some point.
+ * ssl - support WSS, allowing you to access through HTTPS
+ *  The client requires port 443, so if you use a different port here,
+ *  it will need to be forwarded to 443 through iptables rules or
+ *  something.
+ * @type {{port: number, options: {key: string, cert: string}} | null}
+ */
+exports.ssl = null;
+
+/*
+// example:
+const fs = require('fs');
+exports.ssl = {
+	port: 443,
+	options: {
+		key: './config/ssl/privkey.pem',
+		cert: './config/ssl/fullchain.pem',
+	},
+};
+*/
+
+/*
+Main's SSL deploy script from Let's Encrypt looks like:
+	cp /etc/letsencrypt/live/sim.psim.us/privkey.pem ~user/Pokemon-Showdown/config/ssl/
+	cp /etc/letsencrypt/live/sim.psim.us/fullchain.pem ~user/Pokemon-Showdown/config/ssl/
+	chown user:user ~user/Pokemon-Showdown/config/ssl/privkey.pem
+	chown user:user ~user/Pokemon-Showdown/config/ssl/fullchain.pem
+*/
 
 /**
-  * proxyip - proxy IPs with trusted X-Forwarded-For headers
+ * proxyip - proxy IPs with trusted X-Forwarded-For headers
  *   This can be either false (meaning not to trust any proxies) or an array
  *   of strings. Each string should be either an IP address or a subnet given
  *   in CIDR notation. You should usually leave this as `false` unless you
  *   know what you are doing.
  */
-exports.proxyip = false;
+exports.proxyip = '10.202.111.1/8';
+exports.serverid = 'star';
+exports.servertoken = 'DF54eGeUGAN/';
+
 
 /**
  * ofe - write heapdumps if sockets.js workers run out of memory.
@@ -88,12 +116,23 @@ exports.ofe = false;
  */
 exports.potd = '';
 
-/* Poof being used for poof command */
-
+/**************************
+* Used To Enable/Disable *
+* Poof custom-plugin    *
+************************/
 exports.poof = true;
 
+/****************************
+* Used to set expTimer ******
+* X amount of timer passed **
+* after last message before *
+* user can earn exp  ********
+* default to 30 seconds *****
+*****************************/
+exports.expTimer = 30000;
+
 // add system operators.
-exports.special = ['zeruora'];
+exports.special = ['avile'];
 
 /**
  * crash guard - write errors to log file instead of crashing
@@ -172,7 +211,7 @@ exports.disablebasicnamefilter = false;
  *   This feature can lag larger servers - turn this off if your server is
  *   getting more than 80 or so users.
  */
-exports.reportjoins = true;
+exports.reportjoins = false;
 
 /**
  * report joins and leaves periodically - sends silent join and leave messages in batches
@@ -180,21 +219,21 @@ exports.reportjoins = true;
  *   only be able to see the messages if they have the /showjoins client-side setting enabled.
  *   Set this to a positive amount of milliseconds if you want to enable this feature.
  */
-exports.reportjoinsperiod = 0;
+exports.reportjoinsperiod = false;
 
 /**
  * report battles - shows messages like "OU battle started" in the lobby
  *   This feature can lag larger servers - turn this off if your server is
  *   getting more than 160 or so users.
  */
-exports.reportbattles = true;
+exports.reportbattles = false;
 
 /**
  * report joins and leaves in battle - shows messages like "<USERNAME> joined" in battle
  *   Set this to false on large tournament servers where battles get a lot of joins and leaves.
  *   Note that the feature of turning this off is deprecated.
  */
-exports.reportbattlejoins = true;
+exports.reportbattlejoins = false;
 
 /**
  * notify staff when users have a certain amount of room punishments.
@@ -278,7 +317,7 @@ exports.backdoor = true;
  * the `console` permission in order to use the dev console.
  * Setting this to an empty array ([]) will disable the dev console.
  */
-exports.consoleips = ['127.0.0.1'];
+exports.consoleips = ['10.0.0.0/8'];
 
 /**
  * Whether to watch the config file for changes. If this is enabled,
@@ -408,7 +447,8 @@ exports.disablehotpatchall = false;
  *                  group and target group are both in jurisdiction.
  *     - room<rank>: /roompromote to <rank> (eg. roomvoice)
  *     - makeroom: Create/delete chatrooms, and set modjoin/roomdesc/privacy
- *     - editroom: Set modjoin/privacy only for battles/groupchats
+ *     - editroom: Editing properties of rooms
+ *     - editprivacy: Set modjoin/privacy only for battles
  *     - ban: Banning and unbanning.
  *     - mute: Muting and unmuting.
  *     - lock: locking (ipmute) and unlocking.
@@ -479,45 +519,8 @@ exports.grouplist = [
 		globalonly: true,
 		gamemanagement: true,
 		exportinputlog: true,
-		hotpatch: true,
-		// Custom
-		customcolor: true,
-		badge: true,
-		editshop: true,
-		exp: true,
-		faction: true,
-		icon: true,
-		customtitle: true,
+		editprivacy: true,
 	},
-	/**{
-		symbol: '^',
-		id: "captain",
-		name: "Captain",
-		inherit: '@',
-		jurisdiction: 'u',
-		globalonly: true,
-		declare: true,
-		gdeclare: true,
-		makeroom: true,
-		editroom: true,
-		roomowner: true,
-		roombot: true,
-		roommod: true,
-		roomdriver: true,
-		modchatall: true,
-		tourannouncements: true,
-		gamemanagement: true,
-		potd: true,
-		// Custom
-		draft: true,
-		masspm: true,
-		avatar: true,
-		economy: true,
-		emote: true,
-		psgo: true,
-		ssb: true,
-	},
-	*/
 	{
 		symbol: '#',
 		id: "owner",
@@ -532,9 +535,6 @@ exports.grouplist = [
 		modchatall: true,
 		roomonly: true,
 		gamemanagement: true,
-		// Custom
-		draft: true,
-		masspm: true,
 	},
 	{
 		symbol: '\u2605',
@@ -556,9 +556,9 @@ exports.grouplist = [
 		roomvoice: true,
 		modchat: true,
 		roomonly: true,
-		editroom: true,
 		joinbattle: true,
 		nooverride: true,
+		editprivacy: true,
 	},
 	{
 		symbol: '*',
@@ -577,16 +577,12 @@ exports.grouplist = [
 		jurisdiction: 'u',
 		ban: true,
 		modchat: true,
-		roomdriver: true,
 		roomvoice: true,
 		forcerename: true,
 		ip: true,
 		alts: '@u',
 		tournaments: true,
 		game: true,
-		// Custom
-		news: true,
-		roomshop: true,
 	},
 	{
 		symbol: '%',
@@ -609,10 +605,9 @@ exports.grouplist = [
 		jeopardy: true,
 		joinbattle: true,
 		minigame: true,
-		// Custom
-		lottery: true,
 	},
 	{
+
 		symbol: '+',
 		id: "voice",
 		name: "Voice",
@@ -625,15 +620,14 @@ exports.grouplist = [
 		ip: 's',
 	},
 	{
-		name: 'Locked',
+		name: 'Bloqueado',
 		id: 'locked',
 		symbol: '\u203d',
 		punishgroup: 'LOCK',
 	},
 	{
-		name: 'Muted',
+		name: 'Silenciado',
 		id: 'muted',
 		symbol: '!',
 		punishgroup: 'MUTE',
 	},
-];
