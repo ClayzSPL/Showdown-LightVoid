@@ -13,7 +13,7 @@ exports.serverName = 'Master';
 /**
 * The server IP - Being used to show avatars in profile.
 */
-exports.serverIp = 'star---showdown-darkeavile.c9users.io';
+exports.serverIp = 'https://clayzspl-showdown-lightvoid.glitch.me/';
 
 /**
  * The server address - the address at which Pokemon Showdown should be hosting
